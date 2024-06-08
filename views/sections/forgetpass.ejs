@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP verification UI using bootstrap</title>
+
+  <!-- bootstrap 5 stylesheet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.1/css/bootstrap.min.css"
+    integrity="sha512-Ez0cGzNzHR1tYAv56860NLspgUGuQw16GiOOp/I2LuTmpSK9xDXlgJz3XN4cnpXWDmkNBKXR/VDMTCnAaEooxA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- fontawesome 6 stylesheet -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+    integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.all.min.js "></script>
+    <link href=" https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.min.css " rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #ebecf0;
+    }
+
+    .otp-letter-input {
+      max-width: 100%;
+      height: 90px;
+      border: 1px solid #198754;
+      border-radius: 10px;
+      color: #198754;
+      font-size: 60px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .btn {
+      height: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container p-5">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-5 mt-5">
+        <div class="bg-white p-5 rounded-3 shadow-sm border">
+          <div>
+            <p class="text-center text-success" style="font-size: 5.5rem;"><i
+                class="fa-solid fa-envelope-circle-check"></i></p>
+
+            <form   id="forgetpass" >
+              <p class="text-center text-center h5 ">Please enter your email</p>
+              <div class="row pt-4 pb-2">
+                <div class="col-3" style="margin-left: 50px;">
+                  <input type="email"  id="email" name="email"  placeholder="enter your email">
+                </div>
+              </div>
+              <div class="row pt-5">
+                <div class="col-6">
+                  <input type="button" value="Submitt" class="btn btn-outline-secondary w-100"  style="margin-left: 80px; margin-top: -50px;" id="verify">
+                  <!-- <input  type="button" class="btn btn-outline-secondary w-100"  style="margin-left: 80px; margin-top: -50px;" id="verify">Submitt</button> -->
+                </div>
+              </div>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <form action="resetpassword" id="forgetpass" method="post">
+                              <label for="email">Email Address</label>
+                              <input type="email" name="email" id="email">
+                              <button type="button" id="login">Submitt</button>
+                              <button type="button" id="login">Submitt</button>
+    </form> -->
+</body>
+<script>
+  // console.log('in script');
+  if (document.querySelector("#verify")) {
+    // console.log('in loginnnnn');
+    const login = document.querySelector('#verify');
+    login.addEventListener('click', async () => {
+
+      const form = document.querySelector('#forgetpass');
+      let formData = new FormData(form);
+      let userData = new URLSearchParams(formData);
+
+      try {
+        const response = await fetch('/resetpassword', {
+          method: 'POST',
+          body: userData,
+          headers: {
+            'Content-Type': "application/x-www-form-urlencoded",
+          }
+        });
+        const resData = await response.json();
+        // console.log('resData........',resData);
+        if (response.status === 401) {
+          await Swal.fire({
+            icon: "warning",
+            title: "invalid Email",
+          });
+
+        } else if(response.status === 200) {
+          window.location.replace(`http://localhost:9005/resetpassword?email=${resData.checkmail.active_pin}`);
+        }
+      } catch (error) {
+        alert(error);
+      }
+
+    })
+  }
+</script>
+
+</html>
