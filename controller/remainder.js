@@ -63,10 +63,15 @@ const findmail= async(user_id)=>{
     //  console.log(medicine);
     for(const med of medicine){
         console.log(med);
+        console.log('med.id------------------------------------ssss',med.id);
         let html=`
          <p> Medicine Time</p>
          <p> Medicine:- '${med.medicine_name}' </p>
-         <img src='${med.file}' alt="medication file" />
+
+          <form method="post" action="http://localhost:9005/markdone">
+          <input type='hidden' name='markid' value='${med.id}' />
+          <button type="submitt" >Mark as Done</button>
+          </form>
         `;
         let email=await findmail(med.user_id);
         await mailServices.sendEmail(email, 'Medication Reminder', `It's time to take your medication.`,html,null);
@@ -80,6 +85,6 @@ const findmail= async(user_id)=>{
     }
    }
 
-   cron.schedule('* * * * *',async ()=>{
+   cron.schedule(' * * * * *',async ()=>{
     notification();
    })

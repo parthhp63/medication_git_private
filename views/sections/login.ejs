@@ -103,6 +103,7 @@
 <script>
   //  +alert(window.navigator.userAgent);
   // import swal from 'sweetalert';
+
   if (document.querySelector("#login")) {
     const login = document.querySelector('#login');
     login.addEventListener('click', async () => {
@@ -120,7 +121,8 @@
           }
         });
         const resData = await response.json();
-        if (response.status === 200) {
+        if (response.status == 200) {
+          console.log('response.status',response.status);
           window.location.replace("/dashboard");
         } else {
           await Swal.fire({

@@ -19,7 +19,7 @@ const logout = () => {
             }
         },
 
-        async logoutAll(req,res){
+        async   logoutAll(req,res){
                 await db.sequelize.models.sessions.destroy(
                         {
                             where:{
@@ -28,8 +28,8 @@ const logout = () => {
                         }
                     
                 )
-            res.clearCookie("token");
-            res.redirect("/login");
+                res.clearCookie("token");
+                return  res.status(200).send({ status: 'ok' });
         },
 
         async logoutOther(req,res){
@@ -45,10 +45,9 @@ const logout = () => {
                     }
                 }
             
-        )
+        ) 
 
-    // res.clearCookie("token");
-    res.redirect("/dashboard");
+        return  res.status(200).send({ status: 'ok' });
 
         }
     }

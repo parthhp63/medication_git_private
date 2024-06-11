@@ -4,7 +4,9 @@ const mailServices=require("../services/mailServices");
 const UserAgent = require('user-agents');  
 const bcrypt = require('bcrypt');
 var randomstring = require("randomstring");
-const otpGenerator = require('otp-generator')
+// const otpGenerator = require('otp-generator');
+const otpService = require("../services/otpService");
+const otp4Digit = require("../helpers/otpGenerate");
 
 const {users}=db;
 
@@ -23,8 +25,6 @@ const homeController=()=>{
                 if(emailcheck!=null){
                 return res.status(401).json({message:"Email Already Exists"})
                 }else{
-                    // console.log(req.body);
-                const otp=otpGenerator.generate(4, { lowerCaseAlphabets:false,upperCaseAlphabets: false, specialChars: false });
                 const password=await bcrypt.hash(`${req.body.password}`,5)
                 const data={
                     fname: `${req.body.fname}`, 
@@ -35,13 +35,15 @@ const homeController=()=>{
                     age:`${req.body.age}`,
                     password:password,
                     active_pin:active_pin,
-                    otp:otp
+                    otp:otp4Digit()
                 }
                 console.log(data);
                 await db.sequelize.models.users.create(data);     
                 const html=`<h3>Username:${req.body.email}</h3>
                           <h3>password:${req.body.password}</h3>
-                          <h3>Otp For verification: ${otp}</h3>`;                     
+                          <h3>Otp For verification: ${data.otp}</h3>
+                          
+                          `;                     
                 mailServices.sendEmail(req.body.email,'Thank for registration','Health and Wellness',html,null)
 
               
@@ -60,28 +62,24 @@ const homeController=()=>{
             }
         },
 
+        async markDone(req,res){
+            await db.sequelize.models.medication.update({
+                markDone:1
+           },{ where:{id:`${req.body.markid}`}});
+           res.json('Your medicine is marked as done')
+
+
+            // await db.sequelize.models.users.update('medication',)
+
+        },
+
         async verifyotp(req,res){
-            console.log(req.body);
-            const otp=await db.sequelize.models.users.findOne({ where: { email: `${req.body.email}` } })
-            if(otp==null){
-                return res.status(401).json({message:"Wrong OTP"})
-
-            }
-            else{
-                const a=(`${req.body.otp1}`+`${req.body.otp2}`+`${req.body.otp3}`+`${req.body.otp4}`)
-               if(a==otp.otp){
-                const query=await db.sequelize.models.users.update({ isActivated:1 },
-                    {
-                        where: {
-                            email:`${req.body.email}`
-                            },
-                            },)
-                        return  res.status(200).send({ status: 'ok' });
-
-               }else{
-                return res.status(401).json({message:"Wrong OTP"})
-               }
-            }
+            // req.makeSession = false;
+            flag=false;
+            // const makesession=false;
+            // req.makesession=false;
+            otpService.otpService(req,res,flag);
+            
         },
 
         async verifyuser(req,res){
@@ -95,6 +93,7 @@ const homeController=()=>{
 
         async loginUser(req,res){
             try{
+                console.log(req.body);
                 const user = await db.sequelize.models.users.findOne({ where: { email: `${req.body.email}` } });
                 // console.log(user);
                 if(user==null){
@@ -102,6 +101,7 @@ const homeController=()=>{
                 }
                 else if(user!==null){
                     let password=await bcrypt.compare(`${req.body.password}`, user.password);
+                    console.log('password---------',password);
                     if(password==false || password==null){
                         // console.log('wrong credentials');
                         return res.status(401).json({message:"Wrong Credentials"})
@@ -119,7 +119,7 @@ const homeController=()=>{
                         
                         const session={
                             user_id:user.id,
-                            session:token
+                            session:token,
                         }
                         await db.sequelize.models.sessions.create(session);
                         // console.log(session);

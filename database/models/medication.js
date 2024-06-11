@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     start_date: DataTypes.DATEONLY,
     end_date: DataTypes.DATEONLY,
     time: DataTypes.TIME,
-    week_day: DataTypes.STRING
+    week_day: DataTypes.STRING,
+    markDone:DataTypes.TINYINT
   }, {
     sequelize,
     modelName: 'medication',

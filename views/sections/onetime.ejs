@@ -31,37 +31,63 @@
 
             <form id="onetimeform" action="onetime" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label for="formGroupExampleInput" class="form-label">Medicine Name:-</label>
-                    <input required type="text" class="form-control" name="medicine" id="formGroupExampleInput"
+                    <label for="" class="form-label">Medicine Name:-</label>
+                    <input required type="text" class="form-control" name="medicine" id="medname"
                         placeholder="Example Medicine">
                 </div>
                 <div class="mb-3">
-                    <label for="formGroupExampleInput2" class="form-label">Description:-</label>
-                    <input required type="text" class="form-control" name="description" id="formGroupExampleInput2"
+                    <label for="" class="form-label">Description:-</label>
+                    <input required type="text" class="form-control" name="description" id="desc"
                         placeholder="Another Description">
                 </div>
 
                 <div class="mb-3">
-                    <label for="formGroupExampleInput2" class="form-label">Date:-</label>
-                    <input required type="date" name="date" class="form-control" id="formGroupExampleInput2"
-                        placeholder="Another Description">
+                    <label for="" class="form-label">Date:-</label>
+                    <input required type="date" name="date" class="form-control" id="date"
+                       >
                 </div>
                 <div class="mb-3">
-                    <label for="formGroupExampleInput2" class="form-label">Time:-</label>
-                    <input required type="time" name="time" class="form-control" id="formGroupExampleInput2"
-                        placeholder="Another Description">
+                    <label for="" class="form-label">Time:-</label>
+                    <input required type="time" name="time" class="form-control" id="time"
+                      >
                 </div>
                 <div class="mb-3">
-                    <label for="formGroupExampleInput2" class="form-label">Files:-</label>
-                    <input required type="file" name="onetimefile" class="form-control" id="formGroupExampleInput2">
+                    <label for="" class="form-label">Files:-</label>
+                    <input required type="file" name="onetimefile" class="form-control" id="form">
                 </div><br>
 
-                <center><input required type="submit" class="btn btn-primary" value="Add Medication" id="onetimesubmitt"></center>
+                <center><input required type="submit" onclick="return validateData()" class="btn btn-primary" value="Add Medication" id="onetimesubmitt"></center>
             </form>
 
 
         </section>
 
 </body>
-
+<script>
+    let flag;
+     function validateData() {
+      var validate = ['fname', 'lname','email','dob','mobile','age','password'];
+      var display = ['First Name', 'Last Name','Email','Date of Birth','Mobile No','Age','Password'];
+      let flag;
+      for(var i=0;i<validate.length;i++){  
+        // console.log('---------',  document.getElementsByClassName('validate_of')[i])
+                        // console.log(validate);
+                         str=document.getElementById(validate[i]);
+                         //  console.log(str);
+                         if(str.value.trim()=='' || str.value.trim()==null){
+                          console.log("goted");
+                             document.getElementsByClassName('validate_of')[i].innerHTML= display[i]+" cannot be blank";
+                             flag=1;
+                        }                           
+                        else{ 
+                            document.getElementsByClassName('validate_of')[i].innerHTML="";
+                        }
+                    }
+                  if(flag===1){
+                      return false;
+                  }
+                   
+                      return true;
+                  }
+</script>
 </html>

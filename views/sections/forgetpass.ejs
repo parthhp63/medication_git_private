@@ -59,17 +59,17 @@
               </div>
               <div class="row pt-5">
                 <div class="col-6">
-                  <input type="button" value="Submitt" class="btn btn-outline-secondary w-100"  style="margin-left: 80px; margin-top: -50px;" id="verify">
+                  <button type="button" class="btn btn-outline-secondary w-100"  style="margin-left: 80px; margin-top: -50px;" id="verify">submitt</button>
                   <!-- <input  type="button" class="btn btn-outline-secondary w-100"  style="margin-left: 80px; margin-top: -50px;" id="verify">Submitt</button> -->
                 </div>
               </div>
-              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
+    </form>
+  
   <!-- <form action="resetpassword" id="forgetpass" method="post">
                               <label for="email">Email Address</label>
                               <input type="email" name="email" id="email">
@@ -78,9 +78,7 @@
     </form> -->
 </body>
 <script>
-  // console.log('in script');
   if (document.querySelector("#verify")) {
-    // console.log('in loginnnnn');
     const login = document.querySelector('#verify');
     login.addEventListener('click', async () => {
 
@@ -105,7 +103,8 @@
           });
 
         } else if(response.status === 200) {
-          window.location.replace(`http://localhost:9005/resetpassword?email=${resData.checkmail.active_pin}`);
+          console.log('resData*************',resData.checkmail.email);
+          window.location.replace(`http://localhost:9005/resetpassword?email=${resData.checkmail.email}`);
         }
       } catch (error) {
         alert(error);

@@ -38,11 +38,18 @@
                         <div class="content" id="logoutid">
                             <a href="/logout" class="nav-link px-0"> <span class="d-none d-sm-inline">Logout from this
                                     Device</span> </a>
-                            <a href="/logoutall" class="nav-link px-0"> <span class="d-none d-sm-inline">Logout from All
+                            <!-- <a href=""></a> -->
+
+                            <a   class="d-none d-sm-inline nav-link px-0"  id="logoutall">    Logout from all device  </a>
+
+                            <a   class="d-none d-sm-inline nav-link px-0"  id="logoutother">    Logout from other device  </a>
+
+                            <!-- <button type="button" id="logoutother"  class="d-none d-sm-inline nav-link px-0">   Logout from other device </button> -->
+                            <!-- <a href="/logoutall" class="nav-link px-0"> <span class="d-none d-sm-inline">Logout from All
                                     device</span> </a>
                             <a href="/logoutother" class="nav-link px-0"> <span class="d-none d-sm-inline">Logout from
                                     other
-                                    device</span> </a>
+                                    device</span> </a> -->
                         </div>
                     </li>
                     
@@ -55,8 +62,9 @@
         </div>
 
 
-
+        <script src="/socket/socket.io.js"></script>
         <script>
+                            var socket = io();
             var coll = document.getElementsByClassName("collapsible");
             var hide = document.getElementById("content");
             var hide1 = document.getElementById("logoutid");
@@ -77,4 +85,57 @@
                     }
                 });
             }
+
+            
+            if (document.querySelector("#logoutother")) {
+          const logoutall = document.getElementById("logoutother");
+          logoutall.addEventListener("click", async () => {
+            try {
+              const response = await fetch("/logoutother", {
+                method: "POST",
+                headers: {
+                },
+              });
+              const resData = await response.json();
+              if (response.status == 200) {
+
+                  socket.emit("result_request",{})
+  
+              } else {
+              }
+            } catch (error) {
+              console.log(error);
+            }
+
+          });
+        }
+
+        if (document.querySelector("#logoutall")) {
+          const logoutall = document.getElementById("logoutall");
+          logoutall.addEventListener("click", async () => {
+            try {
+              const response = await fetch("/logoutall", {
+                method: "POST",
+                headers: {
+                },
+              });
+              const resData = await response.json();
+              if (response.status == 200) {
+
+                  socket.emit("result_request",{})
+  
+              } else {
+              }
+            } catch (error) {
+              console.log(error);
+            }
+
+          });
+        }
+
+
+        socket.on('logout_response',()=>{
+              window.location.reload();
+              window.location.replace("/login");
+            })
         </script>
